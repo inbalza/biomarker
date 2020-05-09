@@ -1,0 +1,393 @@
+@prefix : <http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2> .
+
+<http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2> rdf:type owl:Ontology .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#assesedBy
+:assesedBy rdf:type owl:ObjectProperty ;
+           rdfs:domain :BiomarkerType ;
+           rdfs:range [ rdf:type owl:Class ;
+                        owl:unionOf ( :Assay
+                                      :Device
+                                    )
+                      ] .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#hasComponent
+:hasComponent rdf:type owl:ObjectProperty ;
+              rdfs:domain :ComplexBM ;
+              rdfs:range :BiomarkerType .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#hasTreatment
+:hasTreatment rdf:type owl:ObjectProperty ;
+              rdfs:domain [ rdf:type owl:Class ;
+                            owl:unionOf ( :MonitoringBM
+                                          :PharmacodynamicBM
+                                          :PredictiveBM
+                                          :SafetyBM
+                                        )
+                          ] ;
+              rdfs:range :Treatment .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#indicatorOf
+:indicatorOf rdf:type owl:ObjectProperty ;
+             rdfs:domain :Biomarker ;
+             rdfs:range <http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Disease/Condition> .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#measuredIn
+:measuredIn rdf:type owl:ObjectProperty ;
+            rdfs:domain :BiomarkerType ;
+            rdfs:range <http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Location/Source> .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#hasEvidence
+:hasEvidence rdf:type owl:DatatypeProperty ;
+             rdfs:domain :Biomarker ;
+             rdfs:range xsd:integer .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#hasMolecularID
+:hasMolecularID rdf:type owl:DatatypeProperty ;
+                rdfs:domain :MolecularBM ;
+                rdfs:range rdfs:Literal .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#hasMolecularType
+:hasMolecularType rdf:type owl:DatatypeProperty ;
+                  rdfs:domain :MolecularBM ;
+                  rdfs:range rdfs:Literal .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Assay
+:Assay rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Biomarker
+:Biomarker rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#BiomarkerStatus
+:BiomarkerStatus rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#BiomarkerType
+:BiomarkerType rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#ComplexBM
+:ComplexBM rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Device
+:Device rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#DiagnosticBM
+:DiagnosticBM rdf:type owl:Class ;
+              rdfs:subClassOf :Biomarker .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#HistologicBM
+:HistologicBM rdf:type owl:Class ;
+              rdfs:subClassOf :BiomarkerType .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#MolecularBM
+:MolecularBM rdf:type owl:Class ;
+             rdfs:subClassOf :BiomarkerType .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#MonitoringBM
+:MonitoringBM rdf:type owl:Class ;
+              rdfs:subClassOf :Biomarker .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#PharmacodynamicBM
+:PharmacodynamicBM rdf:type owl:Class ;
+                   rdfs:subClassOf :Biomarker .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#PhysiologicBM
+:PhysiologicBM rdf:type owl:Class ;
+               rdfs:subClassOf :BiomarkerType .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#PotentialBM
+:PotentialBM rdf:type owl:Class ;
+             rdfs:subClassOf :BiomarkerStatus .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#PredictiveBM
+:PredictiveBM rdf:type owl:Class ;
+              rdfs:subClassOf :Biomarker .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#PrognosticBM
+:PrognosticBM rdf:type owl:Class ;
+              rdfs:subClassOf :Biomarker .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#QualifiedBM
+:QualifiedBM rdf:type owl:Class ;
+             rdfs:subClassOf :BiomarkerStatus .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#RadiographicBM
+:RadiographicBM rdf:type owl:Class ;
+                rdfs:subClassOf :BiomarkerType .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#RiskBM
+:RiskBM rdf:type owl:Class ;
+        rdfs:subClassOf :Biomarker .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#SafetyBM
+:SafetyBM rdf:type owl:Class ;
+          rdfs:subClassOf :Biomarker .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Treatment
+:Treatment rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#ValidatedBM
+:ValidatedBM rdf:type owl:Class ;
+             rdfs:subClassOf :BiomarkerStatus .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Disease/Condition
+<http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Disease/Condition> rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Location/Source
+<http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Location/Source> rdf:type owl:Class .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#AKT_overexpression
+:AKT_overexpression rdf:type owl:NamedIndividual ,
+                             :MolecularBM ,
+                             :PotentialBM ,
+                             :PredictiveBM ;
+                    :assesedBy :Gene_expression_profiling ,
+                               :Microarray ;
+                    :hasTreatment :Trastuzumab ;
+                    :indicatorOf :Breast_Cancer ;
+                    :measuredIn :Tissue ;
+                    :hasEvidence 22842582 .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Alzheimer
+:Alzheimer rdf:type owl:NamedIndividual ,
+                    <http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Disease/Condition> .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Anti-HER2_Therapy
+:Anti-HER2_Therapy rdf:type owl:NamedIndividual ,
+                            :Treatment .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Aortic_pulse_wave_velocity
+:Aortic_pulse_wave_velocity rdf:type owl:NamedIndividual ,
+                                     :Assay .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Arterial_stiffness
+:Arterial_stiffness rdf:type owl:NamedIndividual ,
+                             :PhysiologicBM ,
+                             :RiskBM ,
+                             :ValidatedBM ;
+                    :assesedBy :Aortic_pulse_wave_velocity ;
+                    :indicatorOf :Cardiovascular_Disease ;
+                    :measuredIn :Finger ;
+                    :hasEvidence 16461838 .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Bipolar_Disorder
+:Bipolar_Disorder rdf:type owl:NamedIndividual ,
+                           <http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Disease/Condition> .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Blood
+:Blood rdf:type owl:NamedIndividual ,
+                <http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Location/Source> .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Brain
+:Brain rdf:type owl:NamedIndividual ,
+                <http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Location/Source> .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Brain_glucose_metabolism
+:Brain_glucose_metabolism rdf:type owl:NamedIndividual ,
+                                   :Assay .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Breast_Cancer
+:Breast_Cancer rdf:type owl:NamedIndividual ,
+                        <http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Disease/Condition> .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Cardiovascular_Disease
+:Cardiovascular_Disease rdf:type owl:NamedIndividual ,
+                                 <http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Disease/Condition> .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#ER-PR-HER2
+:ER-PR-HER2 rdf:type owl:NamedIndividual ,
+                     :MolecularBM ,
+                     :PotentialBM ,
+                     :PredictiveBM ,
+                     :PrognosticBM ;
+            :assesedBy :Gene_expression_profiling ,
+                       :Immunohistochemistry ,
+                       :Microarray ;
+            :hasTreatment :Anti-HER2_Therapy ;
+            :indicatorOf :Breast_Cancer ;
+            :measuredIn :Tissue ;
+            :hasEvidence 20107892 ;
+            :hasMolecularID "ER"^^rdfs:Literal ,
+                            "HER2"^^rdfs:Literal ,
+                            "PR"^^rdfs:Literal ;
+            :hasMolecularType "Transcript"^^rdfs:Literal .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#FDG-Positron_Emission_Tomography
+:FDG-Positron_Emission_Tomography rdf:type owl:NamedIndividual ,
+                                           :Device .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Ficoll-Paque-PLUS
+:Ficoll-Paque-PLUS rdf:type owl:NamedIndividual ,
+                            :Device .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Finger
+:Finger rdf:type owl:NamedIndividual ,
+                 <http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Location/Source> .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Gene_expression_profiling
+:Gene_expression_profiling rdf:type owl:NamedIndividual ,
+                                    :Assay .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Hepatocellular_Carcinoma
+:Hepatocellular_Carcinoma rdf:type owl:NamedIndividual ,
+                                   <http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Disease/Condition> .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#IL-6
+:IL-6 rdf:type owl:NamedIndividual ,
+               :DiagnosticBM ,
+               :MolecularBM ,
+               :PotentialBM ;
+      :assesedBy :Serum_protein_levels ;
+      :indicatorOf :Hepatocellular_Carcinoma ;
+      :measuredIn :Serum ;
+      :hasEvidence 23082483 ;
+      :hasMolecularID "P05231 (Uniprot)"^^rdfs:Literal ;
+      :hasMolecularType "Protein"^^rdfs:Literal .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Immunohistochemistry
+:Immunohistochemistry rdf:type owl:NamedIndividual ,
+                               :Assay .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Microarray
+:Microarray rdf:type owl:NamedIndividual ,
+                     :Device .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#OGG1-POLG-NDUFV2
+:OGG1-POLG-NDUFV2 rdf:type owl:NamedIndividual ,
+                           :DiagnosticBM ,
+                           :MolecularBM ,
+                           :PotentialBM ;
+                  :assesedBy :Ficoll-Paque-PLUS ,
+                             :Gene_expression_profiling ;
+                  :indicatorOf :Bipolar_Disorder ;
+                  :measuredIn :Blood ;
+                  :hasEvidence 26241352 ;
+                  :hasMolecularType "Transcript"^^rdfs:Literal .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#PDG-PET
+:PDG-PET rdf:type owl:NamedIndividual ,
+                  :DiagnosticBM ,
+                  :PotentialBM ,
+                  :RadiographicBM ;
+         :assesedBy :Brain_glucose_metabolism ,
+                    :FDG-Positron_Emission_Tomography ;
+         :indicatorOf :Alzheimer ;
+         :measuredIn :Brain ;
+         :hasEvidence 31253185 .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Serum
+:Serum rdf:type owl:NamedIndividual ,
+                <http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Location/Source> .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Serum_protein_levels
+:Serum_protein_levels rdf:type owl:NamedIndividual ,
+                               :Assay .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Tissue
+:Tissue rdf:type owl:NamedIndividual ,
+                 <http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Location/Source> .
+
+
+###  http://www.semanticweb.org/belle/ontologies/2020/4/untitled-ontology-2#Trastuzumab
+:Trastuzumab rdf:type owl:NamedIndividual ,
+                      :Treatment .
+
+
+#################################################################
+#    General axioms
+#################################################################
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :HistologicBM
+                :MolecularBM
+                :PhysiologicBM
+                :RadiographicBM
+              )
+] .
+
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :PotentialBM
+                :QualifiedBM
+                :ValidatedBM
+              )
+] .
+
+
+###  Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi
