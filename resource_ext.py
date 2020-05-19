@@ -60,7 +60,7 @@ def extract_upbd(input_file,output_file):
     '''
     Adding relevant columns: 
     Source = Urine, Molecular type = Protein
-    The dataset does not contain information about technology or evidence level - will not be added for now
+    The dataset does not contain information about evidence level
     '''
     subset['Type'] = 'MolecularBM'
     subset['Source'] = 'Urine'
@@ -68,15 +68,16 @@ def extract_upbd(input_file,output_file):
     subset['Molecular type'] = 'Protein'
 
     # Renaming columns to fit the biomarker model terminology 
-    subset.rename(columns={'Protein name':'Name','Protein ID':'Molecular ID','Biomarker usage':'Usage','Experiment':'Assay/Technology'}, inplace=True)
+    subset.rename(columns={'Protein name':'Name','Protein ID':'Molecular ID','Biomarker usage':'Usage','Experiment':'Assay/Test'}, inplace=True)
 
     # Write to csv file
     new_index = [
-        'Name','Usage','Disease','Disease ID','In a panel','Evidence level',
-        'Type','Source','Source ID','Assay/Technology','Pmid','Molecular type','Molecular ID','Treatment']
+        'Name','Usage','Disease','Disease ID','In a panel',
+        'Type','Source','Source ID','Assay/Test','Pmid','Molecular type','Molecular ID','Treatment']
 
     print("Writing to "+output_file)
     subset.to_csv(output_file, columns = new_index)
+    return subset
 
 def extract_oncomx(output_file):
     '''
@@ -133,7 +134,7 @@ def extract_oncomx(output_file):
 
     subset.rename(columns={
         'gene_symbol':'Name','test_is_a_panel':'In a panel','do_name':'Disease','doid':'Disease ID',
-        'actual_use':'Usage','specimen_type':'Source','test_trade_name':'Test trade name',
+        'actual_use':'Usage','specimen_type':'Source','test_trade_name':'Assay/Test',
         'test_manufacturer':'Test manufacturer','pmid':'Pmid','test_adoption_evidence':'Evidence level',
         'biomarker_drug':'Treatment','biomarker_description':'Description','biomarker_origin':'Molecular type','test_trial_id':'Clinical trail ID'
         }, inplace=True)
@@ -141,10 +142,11 @@ def extract_oncomx(output_file):
     # Write to csv file
     new_index = [
         'Name','Usage','Disease','Disease ID','In a panel','Evidence level','Type','Source','Source ID',
-        'Test trade name','Test manufacturer','Pmid','Molecular type','Molecular ID','Treatment','Description','Clinical trail ID']
+        'Assay/Test','Test manufacturer','Pmid','Molecular type','Molecular ID','Treatment','Description','Clinical trail ID']
     
     print("Writing to "+output_file)
     subset.to_csv(output_file, columns = new_index)
+    return subset
 
 def extract_cbd(output_file):
     """
@@ -171,7 +173,7 @@ def extract_cbd(output_file):
     # Adjusting 
     molecular_types = {
         ('Protein','protein'):'Protein',
-        ('DNA','RNA','MicroRNA','LncRNA','LncRNA ','Small nucleolar RNAs (snoRNAs)','Circular RNA'):'Nucleic acid',
+       # ('DNA','RNA','MicroRNA','LncRNA','LncRNA ','Small nucleolar RNAs (snoRNAs)','Circular RNA'):'Nucleic acid',
         'Other':np.NaN
     }
     for key,value in molecular_types.items():
@@ -213,10 +215,11 @@ def extract_cbd(output_file):
     subset['Type'] = 'MolecularBM'
 
     subset.rename(columns={
-        'Biomarker':'Name','Application':'Usage','PMID':'Pmid','Categary':'Molecular type'}, inplace=True)
+        'Biomarker':'Name','Application':'Usage','PMID':'Pmid','Categary':'Molecular type', 'Experiment':'Assay/Test'}, inplace=True)
     
     # Write to csv file
-    new_index = ['Name','Usage','Disease','Disease ID','Type','Source','Source ID','Experiment','Pmid','Molecular type','Description']
+    new_index = ['Name','Usage','Disease','Disease ID','Type','Source','Source ID','Assay/Test','Pmid','Molecular type','Description']
     
     print("Writing to "+output_file)
-    subset.to_csv(output_file, columns = new_index)    
+    subset.to_csv(output_file, columns = new_index)  
+    return subset  

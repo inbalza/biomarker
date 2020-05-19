@@ -10,13 +10,13 @@ dname = os.path.dirname(abspath)
 
 input_file = dname+'/upbd.xls'
 output_file = dname+'/bm_upbd.csv'
-extract_upbd(input_file,output_file)
+df_upbd = extract_upbd(input_file,output_file)
 
 output_file = dname+'/bm_oncomx.csv'
-extract_oncomx(output_file)
+df_oncomx = extract_oncomx(output_file)
 
 output_file = dname+'/bm_cbd.csv'
-extract_cbd(output_file)
+df_cbd = extract_cbd(output_file)
 
 #output_file = dname+'/bm_ptsd.csv'
 #extract_ptsd(output_file)
