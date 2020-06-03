@@ -6,3 +6,11 @@ Biomarkers, or biological markers, refer to a broad subcategory of medical signs
 The aim of this project is to help unifying biomarker information by creating a light ontology (OWL) model and applying it on data from different resources.
 
 ## Usage
+
+*create_bm_ontology.py* creates the owl ontology using Owlready2 package, can be installed by :
+```
+pip install owlready2
+```
+
+*harmonize.py* and *resource_ext.py* extract data sources and add instances to ontology
+*query_graph.py* uses SPARQL to query instances created in ontology
