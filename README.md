@@ -14,3 +14,7 @@ pip install owlready2
 
 *harmonize.py* and *resource_ext.py* extract data sources and add instances to ontology
 *query_graph.py* uses SPARQL to query instances created in ontology
+
+Owl ontology models can be visualized with Protégé 
+https://protege.stanford.edu/products.php#desktop-protege
+VOWL plugin for visualization: http://vowl.visualdataweb.org/protegevowl.html
