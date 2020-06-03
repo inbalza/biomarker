@@ -12,9 +12,9 @@ The aim of this project is to help unifying biomarker information by creating a 
 pip install owlready2
 ```
 
-*harmonize.py* and *resource_ext.py* extract data sources and add instances to ontology
+*harmonize.py* and *resource_ext.py* extract data sources and add instances to ontology <br>
 *query_graph.py* uses SPARQL to query instances created in ontology
 
-Owl ontology models can be visualized with Protégé 
-https://protege.stanford.edu/products.php#desktop-protege
+OWL ontology models can be visualized with Protégé : <br>
+https://protege.stanford.edu/products.php#desktop-protege <br>
 VOWL plugin for visualization: http://vowl.visualdataweb.org/protegevowl.html
