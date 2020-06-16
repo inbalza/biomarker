@@ -3,52 +3,54 @@
          xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
          xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
          xmlns:owl="http://www.w3.org/2002/07/owl#"
-         xml:base="file://D:/ONTOFORCE/model/bm.owl"
-         xmlns="file://D:/ONTOFORCE/model/bm.owl#">
+         xml:base="file://bm_model.owl"
+         xmlns="file://bm_model.owl#">
 
-<owl:Ontology rdf:about="file://D:/ONTOFORCE/model/bm.owl"/>
+<owl:Ontology rdf:about="file://bm_model.owl"/>
 
-<owl:ObjectProperty rdf:about="#hasComponent">
-  <rdfs:domain rdf:resource="#BMPanel"/>
-  <rdfs:range rdf:resource="#Biomarker"/>
+<owl:ObjectProperty rdf:about="#indicatorOf">
+  <rdfs:domain rdf:resource="#Biomarker"/>
+  <rdfs:range rdf:resource="#Disease"/>
+  <owl:inverseOf rdf:resource="#hasIndicator"/>
 </owl:ObjectProperty>
 
-<owl:DatatypeProperty rdf:about="#hasEvidence">
+<owl:ObjectProperty rdf:about="#hasIndicator">
+  <rdfs:domain rdf:resource="#Disease"/>
+  <rdfs:range rdf:resource="#Biomarker"/>
+  <owl:inverseOf rdf:resource="#indicatorOf"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#hasEvidence">
   <rdfs:domain rdf:resource="#Biomarker"/>
-  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-</owl:DatatypeProperty>
+  <rdfs:range rdf:resource="#Publication"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#measuredIn">
+  <rdfs:domain rdf:resource="#Biomarker"/>
+  <rdfs:range rdf:resource="#AnatomicalEntity"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#measuredBy">
+  <rdfs:domain rdf:resource="#BiomarkerType"/>
+  <rdfs:range rdf:resource="#AssayTest"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#hasTrearment">
+  <rdfs:domain rdf:resource="#ResponseBM"/>
+  <rdfs:range rdf:resource="#Treatment"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#hasComponent">
+  <rdfs:domain rdf:resource="#ComplexBM"/>
+  <rdfs:range rdf:resource="#Biomarker"/>
+</owl:ObjectProperty>
 
 <owl:DatatypeProperty rdf:about="#hasEvidenceLevel">
   <rdfs:domain rdf:resource="#Biomarker"/>
   <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
 </owl:DatatypeProperty>
 
-<owl:DatatypeProperty rdf:about="#hasType">
-  <rdfs:domain rdf:resource="#BiomarkerType"/>
-  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-</owl:DatatypeProperty>
-
-<owl:DatatypeProperty rdf:about="#indicatorOf">
-  <rdfs:domain rdf:resource="#Biomarker"/>
-  <rdfs:range rdf:resource="http://purl.obolibrary.org/obo/DOID_4"/>
-</owl:DatatypeProperty>
-
-<owl:DatatypeProperty rdf:about="#measuredIn">
-  <rdfs:domain rdf:resource="#BiomarkerType"/>
-  <rdfs:range rdf:resource="http://purl.obolibrary.org/obo/UBERON_0001062"/>
-</owl:DatatypeProperty>
-
 <owl:DatatypeProperty rdf:about="#hasDescription">
-  <rdfs:domain rdf:resource="#Biomarker"/>
-  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-</owl:DatatypeProperty>
-
-<owl:DatatypeProperty rdf:about="#inPanel">
-  <rdfs:domain rdf:resource="#Biomarker"/>
-  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
-</owl:DatatypeProperty>
-
-<owl:DatatypeProperty rdf:about="#hasClinicalTrialID">
   <rdfs:domain rdf:resource="#Biomarker"/>
   <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
 </owl:DatatypeProperty>
@@ -63,52 +65,40 @@
   <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
 </owl:DatatypeProperty>
 
-<owl:DatatypeProperty rdf:about="#hasTrearment">
-  <rdfs:domain rdf:resource="#RiskBM"/>
-  <rdfs:domain rdf:resource="#PredictiveBM"/>
-  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-</owl:DatatypeProperty>
-
-<owl:DatatypeProperty rdf:about="#measuredBy">
-  <rdfs:domain rdf:resource="#BiomarkerType"/>
-  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-</owl:DatatypeProperty>
-
-<owl:DatatypeProperty rdf:about="#hasResponse">
-  <rdfs:domain rdf:resource="#PredictiveBM"/>
-  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-</owl:DatatypeProperty>
-
-<owl:Class rdf:about="#BMPanel">
-  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
-</owl:Class>
-
 <owl:Class rdf:about="#Biomarker">
   <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
 </owl:Class>
 
 <owl:Class rdf:about="#BiomarkerType">
-  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
-</owl:Class>
-
-<owl:Class rdf:about="#MolecularBM">
-  <rdfs:subClassOf rdf:resource="#BiomarkerType"/>
-</owl:Class>
-
-<owl:Class rdf:about="#RiskBM">
   <rdfs:subClassOf rdf:resource="#Biomarker"/>
 </owl:Class>
 
-<owl:Class rdf:about="#PredictiveBM">
+<owl:Class rdf:about="#BiomarkerUsage">
   <rdfs:subClassOf rdf:resource="#Biomarker"/>
 </owl:Class>
 
 <owl:Class rdf:about="#DiagnosticBM">
-  <rdfs:subClassOf rdf:resource="#Biomarker"/>
+  <rdfs:subClassOf rdf:resource="#BiomarkerUsage"/>
 </owl:Class>
 
 <owl:Class rdf:about="#PrognosticBM">
-  <rdfs:subClassOf rdf:resource="#Biomarker"/>
+  <rdfs:subClassOf rdf:resource="#BiomarkerUsage"/>
+</owl:Class>
+
+<owl:Class rdf:about="#PredictiveBM">
+  <rdfs:subClassOf rdf:resource="#BiomarkerUsage"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ResponseBM">
+  <rdfs:subClassOf rdf:resource="#BiomarkerUsage"/>
+</owl:Class>
+
+<owl:Class rdf:about="#RiskBM">
+  <rdfs:subClassOf rdf:resource="#BiomarkerUsage"/>
+</owl:Class>
+
+<owl:Class rdf:about="#MolecularBM">
+  <rdfs:subClassOf rdf:resource="#BiomarkerType"/>
 </owl:Class>
 
 <owl:Class rdf:about="#PhysiologicBM">
@@ -117,6 +107,30 @@
 
 <owl:Class rdf:about="#RadiographicBM">
   <rdfs:subClassOf rdf:resource="#BiomarkerType"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ComplexBM">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Disease">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#AnatomicalEntity">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#AssayTest">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Treatment">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Publication">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
 </owl:Class>
 
 
