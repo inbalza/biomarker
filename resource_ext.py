@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 
 import pandas as pd
 import numpy as np
@@ -22,17 +21,8 @@ def adj_src(df,del_duplicate):
         ("saliva"):"Saliva",
         ("human stool","Stool","stool","feces"):"Feces"
     }
-    '''
-    # to be used in DISQOVER
-    source_ids = {
-        "Tissue":"http://purl.obolibrary.org/obo/UBERON_0000479",
-        "Urine":"http://purl.obolibrary.org/obo/UBERON_0001088", 
-        "Blood":"http://purl.obolibrary.org/obo/UBERON_0000178",
-        "Saliva":"http://purl.obolibrary.org/obo/UBERON_0001836",
-        "Feces":"http://purl.obolibrary.org/obo/UBERON_0001988"
-    }
-    '''
-    # to be used in ontology graph
+    
+    # namespace: http://purl.obolibrary.org/obo/
     source_ids = {
         "Tissue":"UBERON_0000479",
         "Urine":"UBERON_0001088", 
@@ -57,15 +47,14 @@ def adj_src(df,del_duplicate):
     
     return df
 
-def adj_usage(df):
+def adj_usage(df,disq):
     '''
     Input: a pandas.DataFrame object containing 'Usage' column  
     Adjust usage to fit the biomarker model
     Returns the processed DataFrame
     '''
-    '''
     # to be used in DISQOVER
-    usage = {
+    usage_disq = {
         ('Prognosis','prognostic_','prognostic','prognosis'):'Prognosis',
         ('Indicator of severity','Staging','Diease progression'):'Prognosis',
         ('diagnostic_','diagnostic','Diagnosis'):'Diagnosis',
@@ -73,7 +62,7 @@ def adj_usage(df):
         ('predictive','Treatment','Prediction of response to treament'):'Prediction of response',
         ('predisposition','Risk factor'):'Susceptibility/Risk evaluation'
         }
-    '''
+    
     # to be used in ontology graph
     usage = {
         ('Prognosis','prognostic_','prognostic','prognosis'):'PrognosticBM',
@@ -83,10 +72,14 @@ def adj_usage(df):
         ('predictive','Treatment','Prediction of response to treament'):'PredictiveBM',
         ('predisposition','Risk factor'):'RiskBM'
         }
-
-
-    for keys, values in usage.items():
-        df["Usage"] = df["Usage"].replace(to_replace = keys, value = values,regex=True)
+    
+    if disq: 
+        for keys, values in usage_disq.items():
+            df["Usage"] = df["Usage"].replace(to_replace = keys, value = values,regex=True)
+    else: 
+        for keys, values in usage.items():
+            df["Usage"] = df["Usage"].replace(to_replace = keys, value = values,regex=True)
+    
     return df
 
 # Seperate multiple values by '|'
@@ -98,7 +91,7 @@ def adj_mult(val,sep):
         new_val = "|".join(val_list)
         return new_val
     
-def extract_upbd(input_file,output_file):
+def extract_upbd(input_file,output_file,disqover):
     """
     Read local csv file (input_file) downloaded from Urine Protein Biomarker Database 
     http://upbd.bmicc.cn/biomarker/web/indexdb
@@ -111,68 +104,56 @@ def extract_upbd(input_file,output_file):
     # Extracting relevant information
     # The dataset does not contain information about evidence level
     subset = upbd[['Protein name','Protein ID','Biomarker usage','Treatment','Disease','Disease ID','In a panel','Experiment','Pmid']]
-
+    
     # Ajust Disease URIs to fit DISQOVER
-    #  http://purl.bioontology.org/ontology/ICD10CM/C67 -> http://ns.ontoforce.com/datasets/icd10/C67
-    # http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C114841 -> http://ns.ontoforce.com/datasets/nci/C114841
-    def adj_dis_id(val):
-        new_id = val
-        if val.startswith('http://purl.bioontology.org/'):
-            var_list = val.split('/')
-            new_id = 'http://ns.ontoforce.com/datasets/'+var_list[-2][:-2].lower()+'/'+var_list[-1]
-        if val.startswith('http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl'):
-            var_list = val.split('#')
-            new_id = 'http://ns.ontoforce.com/datasets/nci/'+var_list[-1]
-        return new_id
+    if disqover:
+        #  http://purl.bioontology.org/ontology/ICD10CM/C67 -> http://ns.ontoforce.com/datasets/icd10/C67
+        # http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C114841 -> http://ns.ontoforce.com/datasets/nci/C114841
+        def adj_dis_id(val):
+            new_id = val
+            if val.startswith('http://purl.bioontology.org/'):
+                var_list = val.split('/')
+                new_id = 'http://ns.ontoforce.com/datasets/'+var_list[-2][:-2].lower()+'/'+var_list[-1]
+            if val.startswith('http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl'):
+                var_list = val.split('#')
+                new_id = 'http://ns.ontoforce.com/datasets/nci/'+var_list[-1]
+            return new_id
 
-    subset["Disease ID"] = subset.apply(lambda x:adj_dis_id(x["Disease ID"]), axis = 1)
+        subset["Disease ID"] = subset.apply(lambda x:adj_dis_id(x["Disease ID"]), axis = 1)
 
     # Renaming columns to fit the biomarker model terminology and adding relevant columns
     subset.rename(columns={'Protein name':'Name','Protein ID':'Molecular ID','Biomarker usage':'Usage','Experiment':'Assay/Test'}, inplace=True)
     subset['Source'] = 'Urine'
-   # subset['Type'] = 'MolecularBM'
     subset['Type'] = 'Molecular Biomarker'
     subset['Molecular type'] = 'Protein'
     subset['Evidence level'] = np.NaN
 
     # Converting usage to fit the biomarker model and add source id
-    subset = adj_usage(subset)
+    subset = adj_usage(subset, disqover)
     subset = adj_src(subset, False)
 
     # Remove biomarkers with no inforamtion about assay, usage or whether it's a singel or a panel
     nrow_before = subset.shape[0]
     subset = subset.dropna(subset = ['Assay/Test', 'Usage','In a panel'])
+    subset.drop_duplicates(inplace=True) 
     nrow_after = subset.shape[0]
     dropped = nrow_before-nrow_after
     dropped_per = round(dropped/nrow_before*100,2)
-    print("Dropped {} ({}%) rows with missing data over assay, usage or panel".format(dropped, dropped_per))
-
-    # seperate panels to single components
-    panels_df = subset[subset['Molecular ID'].str.contains("\\|", na=False)]
-    singles_df = subset[~subset['Molecular ID'].str.contains("\\|", na=False)]
-    panels_df.to_csv('D:/ontoforce/sources/panels.csv')
-    for index, row in panels_df.iterrows():
-        names = row['Name'].split('|')
-        prot_ids = row['Molecular ID'].split('|')
-        for name, prot_id in zip(names, prot_ids):
-            single_bm = row
-            single_bm['Name'] = name
-            single_bm['Molecular ID'] = prot_id
-            single_bm['In a panel'] = 'TRUE'
-            singles_df = singles_df.append(single_bm, ignore_index=True)
+    print("Dropped {} ({}%) duplicate rows or rows with missing data over assay, usage or panel".format(dropped, dropped_per))
     
-    singles_df['In a panel'] = singles_df['In a panel'].replace({'FALSE':'No', 'TRUE':'Yes',False:'No', True:'Yes'})
-    singles_df['Id'] = singles_df.index+1
+    subset['In a panel'] = subset['In a panel'].replace({'FALSE':'No', 'TRUE':'Yes',False:'No', True:'Yes'})
+    subset['Id'] = subset.reset_index().index+1
+
     # Write to csv file
     new_index = [
         'Id','Name','Usage','Disease','Disease ID','In a panel','Evidence level','Type','Source','Source ID',
         'Assay/Test','Pmid','Molecular type','Molecular ID','Treatment']
     
     print("Writing to "+output_file)
-    singles_df.to_csv(output_file, columns = new_index, index = False)
-    return singles_df
+    subset.to_csv(output_file, columns = new_index, index = False)
+    return subset
 
-def extract_oncomx(output_file):
+def extract_oncomx(output_file,disqover):
     '''
     Oncomx contains datasets of FDA-approved or cleared nucleic acid-based human biomarker tests for cancer
     Each row represents one gene linked to its respective test. 
@@ -208,16 +189,11 @@ def extract_oncomx(output_file):
         'biomarker_drug':'Treatment','biomarker_description':'Description','biomarker_origin':'Molecular type','test_trial_id':'Clinical trail ID'
         }, inplace=True)
     
-    subset["Molecular ID"] = "http://identifiers.org/hgnc.symbol/" + subset["Name"].str.upper()
+    # namespace: http://identifiers.org/hgnc.symbol/
+    subset["Molecular ID"] = subset["Name"].str.upper()
     
-    subset["Type"] = 'MolecularBM'
-    subset["Disease ID"] = "DOID_" + subset["Disease ID"].astype(str)
-    
-    '''
-    # DISQOVER
     subset["Type"] = 'Molecular Biomarker'
     subset["Disease ID"] = "http://purl.obolibrary.org/obo/DOID_" + subset["Disease ID"].astype(str)
-    '''
     
     subset = adj_src(subset, False)
 
@@ -227,11 +203,31 @@ def extract_oncomx(output_file):
     subset["Clinical trail ID"] = subset.apply(lambda x:adj_mult(x["Clinical trail ID"],"/"), axis = 1)
     subset["Assay/Test"] = subset.apply(lambda x:adj_mult(x["Assay/Test"],"_ "), axis = 1)
     subset["Usage"] = subset.apply(lambda x:adj_mult(x["Usage"],None), axis = 1)
-    subset = adj_usage(subset)
+    subset = adj_usage(subset, disqover)
     subset["Pmid"] = subset.apply(lambda x:adj_mult(x["Pmid"],"_"), axis = 1)
     subset["Pmid"] = subset.apply(lambda x:adj_mult(x["Pmid"],None), axis = 1)
 
-    subset['Id'] = subset.reset_index().index+1
+    # group panel participants into one biomarker with references to its participants
+    panel_groups = subset[subset['In a panel']=='Y'].groupby(['Pmid','Disease','Description','Usage','Molecular type','Assay/Test'])
+    singledf = subset[subset['In a panel']=='N']
+
+    for name, group in panel_groups:
+        first_row = True
+        for index,row in group.iterrows():
+            if first_row: 
+                name = row['Name']
+                molecular_ids = row['Molecular ID']
+                panel = row
+                first_row = False
+            else: 
+                name = name + ',' + row['Name']
+                molecular_ids = molecular_ids + '|' + row['Molecular ID']
+        panel['Name'] = name
+        panel['Molecular ID'] = molecular_ids
+        singledf = singledf.append(panel)
+
+    singledf['Id'] = singledf.reset_index().index+1
+    singledf['In a panel'] = 'No'
 
     # Write to csv file
     new_index = [
@@ -239,10 +235,11 @@ def extract_oncomx(output_file):
         'Assay/Test','Test manufacturer','Pmid','Molecular type','Molecular ID','Treatment','Description','Clinical trail ID']
     
     print("Writing to "+output_file)
-    subset.to_csv(output_file, columns = new_index, index = False)
-    return subset
+    singledf.to_excel('onc.xlsx', columns = new_index, index = False)
+    singledf.to_json(output_file,orient='records')
+    return singledf
 
-def extract_cbd(output_file):
+def extract_cbd(output_file, disqover):
     """
     CBD: Colorectal Cancer Biomarker Database http://sysbio.suda.edu.cn/CBD/index.html
     Missing information in DB: In a panel, Evidence level, Molecular ID (assinged NaN values)
@@ -279,7 +276,7 @@ def extract_cbd(output_file):
     subset['Evidence level'] = np.NaN
     subset['Molecular ID'] = np.NaN
 
-    subset = adj_usage(subset)
+    subset = adj_usage(subset, disqover)
     subset["Usage"] = subset.apply(lambda x:adj_mult(x["Usage"],","), axis = 1)
 
     # Some rows have multiple values for source, which are mostly duplicates, therefore rem_duplicate = True
@@ -292,7 +289,6 @@ def extract_cbd(output_file):
     dropped_per = round(dropped/nrow_before*100,2)
     print("Dropped {} ({}%) rows with more than one source".format(dropped, dropped_per))
 
-    #subset["Name"] = subset.apply(lambda x:adj_mult(x["Name"],","), axis = 1)
     subset["Assay/Test"] = subset.apply(lambda x:adj_mult(x["Assay/Test"],","), axis = 1)
     subset['Id'] = subset.reset_index().index+1
     
