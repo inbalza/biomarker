@@ -1,35 +1,25 @@
 from owlready2 import *
 
-bm = get_ontology("file://D:/ontoforce/model/bm_model2.owl").load()
+biomarker = get_ontology("file://D:/ontoforce/model/bm_model.owl").load()
 
-print("Loading DOID ontology")
-#doid = get_ontology("http://purl.obolibrary.org/obo/doid/doid-merged.owl").load()
-doid = get_ontology("file://D:/ontoforce/model/doid-merged.owl").load()
-
-print("Loading UBERON ontology")
-#uberon = get_ontology("http://purl.obolibrary.org/obo/uberon.owl").load()
-uberon = get_ontology("file://D:/ontoforce/model/uberon.owl").load()
-
-obo = get_namespace("http://purl.obolibrary.org/obo/")
-
-# Retrieve relevant IDs from ontologies
-disease = doid.search_one(label = "disease")
-anatomical_entity = uberon.search_one(label = "anatomical entity")
-
-with bm:
+with biomarker:
 
     print("Creating classes")
     class Biomarker(Thing):
         pass
-    class DiagnosticBM(Biomarker):
+    class BiomarkerType(Biomarker):
         pass
-    class PrognosticBM(Biomarker):
+    class BiomarkerUsage(Biomarker):
         pass
-    class PredictiveBM(Biomarker):
+    class DiagnosticBM(BiomarkerUsage):
         pass
-    class RiskBM(Biomarker):
+    class PrognosticBM(BiomarkerUsage):
         pass
-    class BiomarkerType(Thing):
+    class PredictiveBM(BiomarkerUsage):
+        pass
+    class ResponseBM(BiomarkerUsage):
+        pass
+    class RiskBM(BiomarkerUsage):
         pass
     class MolecularBM(BiomarkerType):
         pass
@@ -38,37 +28,43 @@ with bm:
     class RadiographicBM(BiomarkerType):
         pass
 
-    class BMPanel(Thing):
+    class ComplexBM(Thing):
         pass
-    
+    class Disease(Thing):
+        pass
+    class AnatomicalEntity(Thing):
+        pass
+    class AssayTest(Thing):
+        pass
+    class Treatment(Thing):
+        pass
+    class Publication(Thing):
+        pass
+
     print("Creating properties")
     # Properties for biomarker minimal information
     class indicatorOf(ObjectProperty):
         domain = [Biomarker]
-        range = [disease]
-    class hasEvidence(DataProperty): 
-        domain = [Biomarker]
-        range = [str] # PMID
+        range = [Disease]
+    class hasIndicator(ObjectProperty):
+        domain = [Disease]
+        range = [Biomarker]
+        inverse_property = indicatorOf
     class hasEvidenceLevel(DataProperty):
         domain = [Biomarker]
-        range = [str] 
-    class inPanel(DataProperty):
+        range = [str]
+    class hasEvidence(ObjectProperty): 
         domain = [Biomarker]
-        range = [bool] # False - single bm, True - a part of a bm panel
+        range = [Publication]
     class measuredIn(ObjectProperty):
+        domain = [Biomarker]
+        range = [AnatomicalEntity] # Source or Location
+    class measuredBy(ObjectProperty):
         domain = [BiomarkerType]
-        range = [anatomical_entity] # Source or Lcation
-    class assesedBy(DataProperty):
-        domain = [BiomarkerType]
-        range = [str] # Assay, Experiment, Technology (one or many) - still has to be linked to an existing ontology
+        range = [AssayTest] # Assay, Experiment, Technology (one or many) 
 
     # optional property - additional info
     class hasDescription(DataProperty):
-        domain = [Biomarker]
-        range = [str]
-
-    # optional property - for biomarkers in clinical trial
-    class hasClinicalTrialID(DataProperty):
         domain = [Biomarker]
         range = [str]
 
@@ -81,18 +77,15 @@ with bm:
         range = [str] # Uniprot, HGNC, Ensemble, chembl,...
     
     # Properties for predictiveBM
-    class hasTrearment(DataProperty):
-        domain = [PredictiveBM]
-        range = [str] # name of medicine or other treatment
-    class hasResponse(DataProperty):
-        domain = [PredictiveBM]
-        range = [str] # sensitive / resistant
-
+    class hasTrearment(ObjectProperty):
+        domain = [PredictiveBM and ResponseBM]
+        range = [Treatment] # name of medicine or other treatment
+    
     # Biomarker panel will be linked to single biomarker instances
     class hasComponent(ObjectProperty):
-        domain = [BMPanel]
+        domain = [ComplexBM]
         range = [Biomarker]
 
 
-bm.save()
+biomarker.save()
 print("Ontology is saved to file")
