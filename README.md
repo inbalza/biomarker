@@ -19,7 +19,7 @@ VOWL plugin for visualization: http://vowl.visualdataweb.org/protegevowl.html
 - <b>BM Minimal info</b> defines the requirements for biomarker information <br>
 - <b>bm_model.owl</b> is the semantic model to represent biomarker data<br>
 - <b>resource_ext.py</b> and <b>harmonize.py</b> are Python scripts used to extract data from sources and use it in the onotlogy model<br>
-- <b>SPARQL_queries.ipynb</b> notebook contains examples for querying the RDF graph with SPARQL 
+- <b>SPARQL_queries.ipynb</b> is a Jupyter Notebook contains examples for querying the RDF graph with SPARQL 
 
 Under 'results' folder:<br>
 - CSV and json files with processed data from different sources
