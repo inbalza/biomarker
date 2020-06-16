@@ -60,7 +60,7 @@ with biomarker:
         domain = [Biomarker]
         range = [AnatomicalEntity] # Source or Location
     class measuredBy(ObjectProperty):
-        domain = [BiomarkerType]
+        domain = [Biomarker]
         range = [AssayTest] # Assay, Experiment, Technology (one or many) 
 
     # optional property - additional info
@@ -78,7 +78,7 @@ with biomarker:
     
     # Properties for predictiveBM
     class hasTrearment(ObjectProperty):
-        domain = [PredictiveBM and ResponseBM]
+        domain = [PredictiveBM | ResponseBM]
         range = [Treatment] # name of medicine or other treatment
     
     # Biomarker panel will be linked to single biomarker instances

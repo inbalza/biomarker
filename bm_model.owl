@@ -3,10 +3,10 @@
          xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
          xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
          xmlns:owl="http://www.w3.org/2002/07/owl#"
-         xml:base="file://bm_model.owl"
-         xmlns="file://bm_model.owl#">
+         xml:base="file://D:/ontoforce/model/bm_model.owl"
+         xmlns="file://D:/ontoforce/model/bm_model.owl#">
 
-<owl:Ontology rdf:about="file://bm_model.owl"/>
+<owl:Ontology rdf:about="file://D:/ontoforce/model/bm_model.owl"/>
 
 <owl:ObjectProperty rdf:about="#indicatorOf">
   <rdfs:domain rdf:resource="#Biomarker"/>
@@ -31,12 +31,19 @@
 </owl:ObjectProperty>
 
 <owl:ObjectProperty rdf:about="#measuredBy">
-  <rdfs:domain rdf:resource="#BiomarkerType"/>
+  <rdfs:domain rdf:resource="#Biomarker"/>
   <rdfs:range rdf:resource="#AssayTest"/>
 </owl:ObjectProperty>
 
 <owl:ObjectProperty rdf:about="#hasTrearment">
-  <rdfs:domain rdf:resource="#ResponseBM"/>
+  <rdfs:domain>
+    <owl:Class>
+      <owl:unionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#PredictiveBM"/>
+        <rdf:Description rdf:about="#ResponseBM"/>
+      </owl:unionOf>
+    </owl:Class>
+  </rdfs:domain>
   <rdfs:range rdf:resource="#Treatment"/>
 </owl:ObjectProperty>
 
