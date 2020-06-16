@@ -6,11 +6,12 @@ Biomarkers, or biological markers, refer to a broad subcategory of biomedical in
 
 ## Tools
 
-Owlready2 package for creating and editing owl files :
+<b>Owlready2</b> - a module for ontology-oriented programming in Python 3.<br>
+Installtion:
 ```
 pip install owlready2
 ```
-Protégé for editing and visualizing owl files: <br>
+<b>Protégé</b> - a free, open source ontology editor and a knowledge management system, available on: <br>
 https://protege.stanford.edu/products.php#desktop-protege <br>
 VOWL plugin for visualization: http://vowl.visualdataweb.org/protegevowl.html
 
